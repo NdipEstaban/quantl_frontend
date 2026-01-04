@@ -17,9 +17,10 @@ import {
   Mail,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function LoginPage() {
-  const [isLoading, setIsLoading] = useState(false);
+  const { login, loginWithGoogle, isSubmitting } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -28,9 +29,17 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => setIsLoading(false), 2000);
+
+    // Call the actual login API through the useAuth hook
+    await login({
+      email: formData.email,
+      password: formData.password,
+    });
+  };
+
+  const handleGoogleLogin = () => {
+    // Redirect to Google OAuth
+    loginWithGoogle();
   };
 
   return (
@@ -108,6 +117,8 @@ export default function LoginPage() {
             <Button
               variant="outline"
               className="w-full bg-secondary/20 border-zinc-500/20 hover:bg-secondary/40 hover:text-foreground"
+              onClick={handleGoogleLogin}
+              disabled={isSubmitting}
             >
               <svg
                 className="mr-2 h-4 w-4"
@@ -153,6 +164,7 @@ export default function LoginPage() {
                       setFormData({ ...formData, email: e.target.value })
                     }
                     required
+                    disabled={isSubmitting}
                   />
                 </div>
               </div>
@@ -178,6 +190,7 @@ export default function LoginPage() {
                       setFormData({ ...formData, password: e.target.value })
                     }
                     required
+                    disabled={isSubmitting}
                   />
                   <Button
                     type="button"
@@ -185,6 +198,7 @@ export default function LoginPage() {
                     size="sm"
                     className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
+                    disabled={isSubmitting}
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4 text-muted-foreground" />
@@ -200,6 +214,7 @@ export default function LoginPage() {
                   type="checkbox"
                   id="remember"
                   className="h-4 w-4 rounded border-zinc-500/30 bg-secondary/20 text-emerald-500 focus:ring-emerald-500/20"
+                  disabled={isSubmitting}
                 />
                 <Label
                   htmlFor="remember"
@@ -212,9 +227,9 @@ export default function LoginPage() {
               <Button
                 type="submit"
                 className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-medium"
-                disabled={isLoading}
+                disabled={isSubmitting}
               >
-                {isLoading ? (
+                {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Signing in...

@@ -36,7 +36,7 @@ import {
 import { cn } from "@/lib/utils";
 import TradeData from "@/types/TradeData";
 import { TradeFormWizard } from "@/components/app/overview/trade-form-wizard";
-import { useHeaderStore } from "@/store/useHeaderStore";
+import { useHeaderStore } from "@/lib/store/useHeaderStore";
 import { format } from "date-fns";
 
 // Mock trades with new TradeData interface structure

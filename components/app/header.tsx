@@ -36,7 +36,7 @@ import {
   startOfYear,
   endOfYear,
 } from "date-fns";
-import { useHeaderStore } from "@/store/useHeaderStore";
+import { useHeaderStore } from "@/lib/store/useHeaderStore";
 
 // Remove these props since we're using Zustand store
 interface DashboardHeaderProps {
@@ -59,7 +59,12 @@ const TIME_RANGES = [
 const TABS = [
   { id: "overview", label: "Overview", icon: View, path: "/app/overview" },
   { id: "journal", label: "Journal", icon: FileText, path: "/app/journal" },
-  { id: "analytics", label: "Analytics", icon: TrendingUp, path: "/app/analytics" },
+  {
+    id: "analytics",
+    label: "Analytics",
+    icon: TrendingUp,
+    path: "/app/analytics",
+  },
   { id: "playbooks", label: "Playbooks", icon: Target, path: "/app/playbooks" },
 ] as const;
 
