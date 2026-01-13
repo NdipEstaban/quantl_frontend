@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { rMultipleData } from "@/lib/analyticsData";
+import { rMultipleData } from "@/lib/constants/analytics";
 import {
   BarChart,
   Bar,

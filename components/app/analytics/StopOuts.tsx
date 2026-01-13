@@ -34,7 +34,7 @@ import {
   stopOutTrendData,
   stopDistributionData,
   maeVsStopData,
-} from "@/lib/analyticsData";
+} from "@/lib/constants/analytics";
 
 export default function StopOutsTab() {
   return (

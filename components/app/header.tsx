@@ -36,7 +36,7 @@ import {
   startOfYear,
   endOfYear,
 } from "date-fns";
-import { useHeaderStore } from "@/lib/store/useHeaderStore";
+import { useHeaderStore } from "@/lib/store/header-store";
 
 // Remove these props since we're using Zustand store
 interface DashboardHeaderProps {

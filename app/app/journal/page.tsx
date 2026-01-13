@@ -34,9 +34,9 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import TradeData from "@/types/TradeData";
+import TradeData from "@/lib/types/trade";
 import { TradeFormWizard } from "@/components/app/overview/trade-form-wizard";
-import { useHeaderStore } from "@/lib/store/useHeaderStore";
+import { useHeaderStore } from "@/lib/store/header-store";
 import { format } from "date-fns";
 
 // Mock trades with new TradeData interface structure

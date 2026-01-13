@@ -34,7 +34,7 @@ import {
   adherenceData,
   adherenceTrendData,
   sqnTrendData,
-} from "@/lib/analyticsData";
+} from "@/lib/constants/analytics";
 
 export default function EdgeMetricsTab() {
   const sqnRating = getSQNRating(edgeMetrics.sqn);

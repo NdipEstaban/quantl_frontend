@@ -44,8 +44,8 @@ import {
 } from "lucide-react";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import TradeData from "@/types/TradeData";
-import { useHeaderStore } from "@/lib/store/useHeaderStore";
+import TradeData from "@/lib/types/trade";
+import { useHeaderStore } from "@/lib/store/header-store";
 import { format } from "date-fns";
 
 interface TradeFormWizardProps {

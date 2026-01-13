@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/app/header";
-import TradeData from "@/types/TradeData";
-import { useHeaderStore } from "@/lib/store/useHeaderStore";
+import TradeData from "@/lib/types/trade";
+import { useHeaderStore } from "@/lib/store/header-store";
 import { TradeFormWizard } from "@/components/app/overview/trade-form-wizard";
 
 const _geist = Geist({ subsets: ["latin"] });

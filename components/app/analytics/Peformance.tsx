@@ -5,7 +5,7 @@ import {
   setupData,
   skillData,
   symbolData,
-} from "@/lib/analyticsData";
+} from "@/lib/constants/analytics";
 import { cn } from "@/lib/utils";
 import {
   AreaChart,

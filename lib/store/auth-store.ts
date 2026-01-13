@@ -1,8 +1,7 @@
 // lib/stores/auth-store.ts
-import { User } from "@/types/auth.types";
+import { User } from "@/lib/types/auth";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-
 
 interface AuthState {
   user: User | null;

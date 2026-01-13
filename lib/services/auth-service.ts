@@ -1,5 +1,10 @@
 // lib/services/auth-service.ts
-import { AuthResponse, LoginDto, RegisterDto, VerifyEmailDto } from "@/types/auth.types";
+import {
+  AuthResponse,
+  LoginDto,
+  RegisterDto,
+  VerifyEmailDto,
+} from "@/lib/types/auth";
 import { apiClient } from "../api-client";
 
 export const authService = {

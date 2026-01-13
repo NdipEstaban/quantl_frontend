@@ -11,7 +11,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import { emotionData } from "@/lib/analyticsData";
+import { emotionData } from "@/lib/constants/analytics";
 
 export default function PsychologyTab() {
   return (

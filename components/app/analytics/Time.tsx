@@ -11,7 +11,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { hourlyData, sessionData } from "@/lib/analyticsData";
+import { hourlyData, sessionData } from "@/lib/constants/analytics";
 
 export default function TimeAnalysisTab() {
   return (

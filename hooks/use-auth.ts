@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner"; // or your toast library
 import { useAuthStore } from "@/lib/store/auth-store";
 import { authService } from "@/lib/services/auth-service";
-import { LoginDto, RegisterDto, VerifyEmailDto } from "@/types/auth.types";
+import { LoginDto, RegisterDto, VerifyEmailDto } from "@/lib/types/auth";
 
 export function useAuth() {
   const router = useRouter();
