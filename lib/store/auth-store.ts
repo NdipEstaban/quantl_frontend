@@ -1,5 +1,5 @@
 // lib/stores/auth-store.ts
-import { User } from "@/lib/types/auth";
+import { User, UserRole } from "@/lib/types/auth-types";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
@@ -21,7 +21,19 @@ interface AuthState {
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
-      user: null,
+      user: {
+        id: "cmjyvgw200000yktxi5ofzegy",
+        email: "estabannd@gmail.com",
+        firstName: "Esteban",
+        lastName: "Ndip",
+        role: UserRole.USER,
+        imageUrl:
+          "https://media.licdn.com/dms/image/v2/D4E03AQEHNwkI8rNb4w/profile-displayphoto-scale_400_400/B4EZqa1AWSGoAg-/0/1763534183626?e=1770854400&v=beta&t=HAV3L_f5LJ4gd6XdhyjOt7nso1LMJEMTY52dv5AKLRA",
+        emailVerified: true,
+        lastLoginAt: "2025-11-18T10:37:23.000Z",
+        createdAt: "2025-11-18T10:37:23.000Z",
+        updatedAt: "2025-06-12T14:21:28.000Z",
+      },
       accessToken: null,
       refreshToken: null,
       isAuthenticated: false,
@@ -59,6 +71,6 @@ export const useAuthStore = create<AuthState>()(
         refreshToken: state.refreshToken,
         isAuthenticated: state.isAuthenticated,
       }),
-    }
-  )
+    },
+  ),
 );

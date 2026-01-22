@@ -1,6 +1,6 @@
 // components/TradingSync/StatsCards.tsx
 import { Card } from "@/components/ui/card";
-import { ConnectedAccount } from "@/lib/store/trading-sync-store";
+import { ConnectedAccount } from "@/lib/types/trading-account-types";
 import { CheckCircle2, Activity, RefreshCw } from "lucide-react";
 
 interface StatsCardsProps {
@@ -9,12 +9,12 @@ interface StatsCardsProps {
 
 export function StatsCards({ accounts }: StatsCardsProps) {
   const activeAccountsCount = accounts.filter(
-    (a) => a.status === "connected"
+    (account) => account.is
   ).length;
 
-  const totalTrades = accounts.reduce((sum, acc) => sum + acc.totalTrades, 0);
+  const totalTrades = accounts.reduce((sum, account) => sum + account.numberOfTrades, 0);
 
-  const autoSyncEnabledCount = accounts.filter((a) => a.autoSync).length;
+  const autoSyncEnabledCount = accounts.filter((account) => account.autoSync).length;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -36,7 +36,7 @@ export function StatsCards({ accounts }: StatsCardsProps) {
             <Activity className="w-4 h-4 text-primary" />
           </div>
           <div>
-            <p className="text-2xl font-bold">{totalTrades.toLocaleString()}</p>
+            <p className="text-2xl font-bold">{totalTrades}</p>
             <p className="text-xs text-muted-foreground">Total Trades Synced</p>
           </div>
         </div>

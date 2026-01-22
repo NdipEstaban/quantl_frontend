@@ -44,7 +44,7 @@ import {
 } from "lucide-react";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import TradeData from "@/lib/types/trade";
+import TradeData from "@/lib/types/trade-types";
 import { useHeaderStore } from "@/lib/store/header-store";
 import { format } from "date-fns";
 

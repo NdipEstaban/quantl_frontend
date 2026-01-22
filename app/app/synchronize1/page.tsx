@@ -6,10 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus } from "lucide-react";
-import { useTradingSyncStore } from "@/lib/store/trading-sync-store";
-import { useConnectedAccounts, usePlatforms } from "@/hooks/use-trading-sync";
+import { useTradingSyncStore } from "@/lib/store/trading-account-store";
+import { useConnectedAccounts } from "@/hooks/use-trading-account";
 import { OverviewTab } from "@/components/app/synchronize/overview-tab";
 import { ConnectionDialog } from "@/components/app/synchronize/connection-dialog";
+import { platformConfig } from "@/lib/constants/platform-config";
 
 export default function TradingSyncPage() {
   const {
@@ -26,11 +27,12 @@ export default function TradingSyncPage() {
   } = useTradingSyncStore();
 
   const { accounts, isLoading, mutate } = useConnectedAccounts();
-  const { platforms } = usePlatforms();
+  const platforms = platformConfig;
 
+  console.log("TradingSyncPage Render:", { accounts, selectedAccount, selectedPlatform, activeTab });
   const handleOpenConnectionDialog = (platformId?: string) => {
     if (platformId) {
-      const platform = platforms.find((p) => p.id === platformId);
+      const platform = platforms[platformId];
       setSelectedPlatform(platform || null);
       resetConnectionForm(platform?.name);
     } else {

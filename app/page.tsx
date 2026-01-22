@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import TradeData from "@/lib/types/trade";
+import TradeData from "@/lib/types/trade-types";
 import { subDays } from "date-fns";
 
 export default function DashboardPage() {

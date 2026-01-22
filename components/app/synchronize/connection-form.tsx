@@ -18,8 +18,11 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
-import { useConnectAccount } from "@/hooks/use-trading-sync";
-import { Platform, useTradingSyncStore } from "@/lib/store/trading-sync-store";
+import { useConnectAccount } from "@/hooks/use-trading-account";
+import {
+  useTradingSyncStore,
+} from "@/lib/store/trading-account-store";
+import { Platform } from "@/lib/types/trading-account-types";
 
 interface ConnectionFormProps {
   platform: Platform;

@@ -2,7 +2,7 @@
 import { Card } from "@/components/ui/card";
 import { DollarSign, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ConnectedAccount } from "@/lib/store/trading-sync-store";
+import { ConnectedAccount } from "@/lib/types/trading-account-types";
 
 interface PortfolioSummaryProps {
   accounts: ConnectedAccount[];

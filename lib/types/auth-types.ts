@@ -10,7 +10,7 @@ export interface User {
   lastName: string;
   role: UserRole;
   imageUrl?: string;
-  emailVerified?: string | null;
+  emailVerified?: boolean | null;
   lastLoginAt?: string | null;
   createdAt?: string;
   updatedAt?: string;

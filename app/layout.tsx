@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/app/header";
-import TradeData from "@/lib/types/trade";
+import TradeData from "@/lib/types/trade-types";
 import { useHeaderStore } from "@/lib/store/header-store";
 import { TradeFormWizard } from "@/components/app/overview/trade-form-wizard";
 

@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ConnectionForm } from "./connection-form";
-import { Platform } from "@/lib/store/trading-sync-store";
+import { Platform } from "@/lib/types/trading-account-types";
 
 interface ConnectionDialogProps {
   open: boolean;

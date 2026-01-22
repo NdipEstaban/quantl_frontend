@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner"; // or your toast library
 import { useAuthStore } from "@/lib/store/auth-store";
 import { authService } from "@/lib/services/auth-service";
-import { LoginDto, RegisterDto, VerifyEmailDto } from "@/lib/types/auth";
+import { LoginDto, RegisterDto, VerifyEmailDto } from "@/lib/types/auth-types";
 
 export function useAuth() {
   const router = useRouter();
@@ -13,7 +13,7 @@ export function useAuth() {
     useAuthStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resetStep, setResetStep] = useState<"request" | "verify" | "reset">(
-    "request"
+    "request",
   );
   const [resetEmail, setResetEmail] = useState("");
 
@@ -29,16 +29,22 @@ export function useAuth() {
     {
       revalidateOnFocus: false,
       revalidateOnReconnect: true,
+      revalidateIfStale: true,
       shouldRetryOnError: false,
       onSuccess: (data) => {
+        console.info("Fetched user profile:", data);
         if (data) {
+          console.clear();
+          console.log("Updating user in store with profile data:", data);
           useAuthStore.getState().setUser(data);
         }
       },
-      onError: () => {
-        clearAuth();
+      onError: (e) => {
+        console.error("Failed to fetch user profile: ", e);
+        //TODO: determine right logic at production
+        //clearAuth();
       },
-    }
+    },
   );
 
   /**
@@ -52,7 +58,7 @@ export function useAuth() {
       const response = await authService.register(data);
 
       toast.success(
-        "Registration successful! Please check your email for verification code."
+        "Registration successful! Please check your email for verification code.",
       );
 
       return { success: true, data: response };
@@ -110,7 +116,7 @@ export function useAuth() {
       setAuth(response.user, response.accessToken!, response.refreshToken!);
 
       toast.success("Login successful!");
-      router.push("/dashboard");
+      router.push("/app");
 
       return { success: true, data: response };
     } catch (error: any) {
@@ -214,7 +220,7 @@ export function useAuth() {
       const response = await authService.resetPassword(
         resetEmail,
         code,
-        newPassword
+        newPassword,
       );
       toast.success("Password reset successful");
 

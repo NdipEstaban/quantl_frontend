@@ -10,8 +10,8 @@ import {
   ArrowDownRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ConnectedAccount } from "@/lib/store/trading-sync-store";
-import { platformConfig } from "@/lib/constants/platorm-config";
+import { platformConfig } from "@/lib/constants/platform-config";
+import { ConnectedAccount } from "@/lib/types/trading-account-types";
 
 interface AccountCardProps {
   account: ConnectedAccount;
@@ -25,8 +25,10 @@ export function AccountCard({ account, onClick }: AccountCardProps) {
 
   const equityChange = account.equity - account.balance;
   const equityChangePercent = ((equityChange / account.balance) * 100).toFixed(
-    2
+    2,
   );
+
+  console.log("Account Card Render:", account);
 
   return (
     <div
@@ -42,7 +44,7 @@ export function AccountCard({ account, onClick }: AccountCardProps) {
           <div className="flex items-start justify-between gap-2">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1 flex-wrap">
-                <p className="font-medium truncate">{account.nickname}</p>
+                <p className="font-medium truncate">{account.accountName}</p>
 
                 {account.isDemo && (
                   <Badge variant="outline" className="text-xs">
@@ -79,11 +81,11 @@ export function AccountCard({ account, onClick }: AccountCardProps) {
               </div>
 
               <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
-                <span>{platform?.name}</span>
+                <span>{account.platform}</span>
                 <span>•</span>
-                <span>Last sync: {account.lastSync}</span>
+                <span>Last sync: {account.lastSyncAt}</span>
                 <span>•</span>
-                <span>{account.totalTrades.toLocaleString()} trades</span>
+                <span>{account.numberOfTrades} trades</span>
               </div>
             </div>
 
@@ -101,7 +103,7 @@ export function AccountCard({ account, onClick }: AccountCardProps) {
             <div>
               <p className="text-xs text-muted-foreground mb-0.5">Balance</p>
               <p className="font-semibold text-sm">
-                {account.balance.toLocaleString()} {account.currency}
+                {account.balance} {account.currency}
               </p>
             </div>
 
@@ -109,13 +111,13 @@ export function AccountCard({ account, onClick }: AccountCardProps) {
               <p className="text-xs text-muted-foreground mb-0.5">Equity</p>
               <div className="flex items-center gap-1">
                 <p className="font-semibold text-sm">
-                  {account.equity.toLocaleString()}
+                  {account.equity}
                 </p>
                 {equityChange !== 0 && (
                   <span
                     className={cn(
                       "text-xs flex items-center",
-                      equityChange > 0 ? "text-success" : "text-destructive"
+                      equityChange > 0 ? "text-success" : "text-destructive",
                     )}
                   >
                     {equityChange > 0 ? (
@@ -134,7 +136,7 @@ export function AccountCard({ account, onClick }: AccountCardProps) {
                 Free Margin
               </p>
               <p className="font-semibold text-sm">
-                {account.freeMargin.toLocaleString()}
+                {account.freeMargin}
               </p>
             </div>
 

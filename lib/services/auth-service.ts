@@ -4,7 +4,7 @@ import {
   LoginDto,
   RegisterDto,
   VerifyEmailDto,
-} from "@/lib/types/auth";
+} from "@/lib/types/auth-types";
 import { apiClient } from "../api-client";
 
 export const authService = {

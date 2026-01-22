@@ -14,11 +14,12 @@ import {
   XCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { ConnectedAccount, useTradingSyncStore } from "@/lib/store/trading-sync-store";
-import { useSyncAllAccounts } from "@/hooks/use-trading-sync";
+import { useTradingSyncStore } from "@/lib/store/trading-account-store";
+import { useSyncAllAccounts } from "@/hooks/use-trading-account";
 import { StatsCards } from "./statistics-card";
 import { AccountCard } from "./account-card";
 import { PortfolioSummary } from "./portfolio-summary";
+import { ConnectedAccount } from "@/lib/types/trading-account-types";
 
 interface OverviewTabProps {
   accounts: ConnectedAccount[];
@@ -31,11 +32,12 @@ export function OverviewTab({
   onAccountClick,
   onSyncAll,
 }: OverviewTabProps) {
+  console.log("Rendering OverviewTab with accounts:", accounts);
   const { syncingAll } = useTradingSyncStore();
   const { syncAllAccounts, isSyncing } = useSyncAllAccounts();
 
   const activeAccountsCount = accounts.filter(
-    (a) => a.status === "connected"
+    (a) => a.status === "connected",
   ).length;
 
   const handleSyncAll = async () => {
@@ -86,7 +88,7 @@ export function OverviewTab({
               <RefreshCw
                 className={cn(
                   "w-3 h-3",
-                  (isSyncing || syncingAll) && "animate-spin"
+                  (isSyncing || syncingAll) && "animate-spin",
                 )}
               />
               {isSyncing || syncingAll ? "Syncing..." : "Sync All"}
