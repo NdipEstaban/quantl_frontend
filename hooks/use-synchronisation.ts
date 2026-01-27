@@ -9,6 +9,7 @@ import {
 } from "@/lib/services/trading-account-service";
 import { ConnectedAccount, Platform } from "@/lib/types/trading-account-types";
 import { useAuthStore } from "@/lib/store/auth-store";
+import { useSynchronisationStore } from "@/lib/store/synchronisation-store";
 
 // Fetch all connected accounts
 export function useConnectedAccounts() {
@@ -27,8 +28,8 @@ export function useConnectedAccounts() {
         console.error("Fetch accounts error:", error);
       },
       onSuccess: (data) => {
-        console.log("Fetched connected accounts:", data, ",user:",user);
-      }
+        console.log("Fetched connected accounts:", data, ",user:", user);
+      },
     },
   );
 
@@ -112,6 +113,7 @@ export function useSyncAccount() {
     "/api/accounts/sync",
     async (key, { arg }: { arg: string }) => {
       try {
+        console.log('synchronising all accounts');
         const response = await tradingAccountService.syncAccount(arg);
         toast.success("Account synced successfully");
 
@@ -141,9 +143,11 @@ export function useSyncAllAccounts() {
 
   const { trigger, isMutating, error } = useSWRMutation(
     "/api/accounts/sync-all",
-    async (key, { arg }) => {
+    async (key, { arg }: { arg: string }) => {
       try {
+        console.log("synchronising all accounts");
         const response = await tradingAccountService.syncAllAccounts(arg);
+        console.log("done synchonising", response);
         toast.success("All accounts synced successfully");
 
         // Revalidate the accounts list to get updated sync status
@@ -169,6 +173,7 @@ export function useSyncAllAccounts() {
 // Update account settings
 export function useUpdateAccount() {
   const { mutate: mutateAccounts } = useConnectedAccounts();
+  const {updateAccount} = useSynchronisationStore();
 
   const { trigger, isMutating, error } = useSWRMutation(
     "/api/accounts/update",
@@ -179,6 +184,9 @@ export function useUpdateAccount() {
 
         // Revalidate the accounts list
         await mutateAccounts();
+
+        // updated affected selected account
+        updateAccount(arg.accountId, arg.updates);
 
         return response;
       } catch (error: any) {
@@ -196,6 +204,7 @@ export function useUpdateAccount() {
     error,
   };
 }
+
 
 // Main hook that combines all trading account functionality
 export function useTradingAccount() {

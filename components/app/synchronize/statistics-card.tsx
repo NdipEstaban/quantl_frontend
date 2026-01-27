@@ -1,7 +1,13 @@
 // components/TradingSync/StatsCards.tsx
 import { Card } from "@/components/ui/card";
 import { ConnectedAccount } from "@/lib/types/trading-account-types";
-import { CheckCircle2, Activity, RefreshCw } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import {
+  CheckCircle2,
+  Activity,
+  RefreshCw,
+  ChartCandlestick,
+} from "lucide-react";
 
 interface StatsCardsProps {
   accounts: ConnectedAccount[];
@@ -9,15 +15,31 @@ interface StatsCardsProps {
 
 export function StatsCards({ accounts }: StatsCardsProps) {
   const activeAccountsCount = accounts.filter(
-    (account) => account.is
+    (account) => account.isActive,
   ).length;
 
-  const totalTrades = accounts.reduce((sum, account) => sum + account.numberOfTrades, 0);
+  const totalTrades = accounts.reduce(
+    (sum, account) => sum + (account.numberOfTrades || 0),
+    0,
+  );
 
-  const autoSyncEnabledCount = accounts.filter((account) => account.autoSync).length;
+  const autoSyncEnabledCount = accounts.filter(
+    (account) => account.autoSync,
+  ).length;
+
+  const mostRecentAccount = [...accounts].sort(
+    (a, b) =>
+      new Date(b.lastSyncAt).getTime() - new Date(a.lastSyncAt).getTime(),
+  )[0];
+
+  const lastSyncActivity = mostRecentAccount
+    ? formatDistanceToNow(new Date(mostRecentAccount.lastSyncAt), {
+        addSuffix: true,
+      }).replace("about ", "")
+    : "Never synced";
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
       <Card className="p-4 bg-card/50 border-border/50">
         <div className="flex items-center gap-3 mb-2">
           <div className="p-2 rounded-lg bg-success/10">
@@ -33,7 +55,7 @@ export function StatsCards({ accounts }: StatsCardsProps) {
       <Card className="p-4 bg-card/50 border-border/50">
         <div className="flex items-center gap-3 mb-2">
           <div className="p-2 rounded-lg bg-primary/10">
-            <Activity className="w-4 h-4 text-primary" />
+            <ChartCandlestick className="w-4 h-4 text-primary" />
           </div>
           <div>
             <p className="text-2xl font-bold">{totalTrades}</p>
@@ -50,6 +72,18 @@ export function StatsCards({ accounts }: StatsCardsProps) {
           <div>
             <p className="text-2xl font-bold">{autoSyncEnabledCount}</p>
             <p className="text-xs text-muted-foreground">Auto-Sync Enabled</p>
+          </div>
+        </div>
+      </Card>
+
+      <Card className="p-4 bg-card/50 border-border/50">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="p-2 rounded-lg bg-warning/10">
+            <Activity className="w-4 h-4 text-primary" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold">{lastSyncActivity}</p>
+            <p className="text-xs text-muted-foreground">Last sync activity</p>
           </div>
         </div>
       </Card>

@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { TradingSyncState } from "../types/trading-account-types";
 
-export const useTradingSyncStore = create<TradingSyncState>()(
+export const useSynchronisationStore = create<TradingSyncState>()(
   devtools(
     (set, get) => ({
       // Initial UI State
@@ -90,6 +90,6 @@ export const useTradingSyncStore = create<TradingSyncState>()(
         set({ syncingAll: true });
       },
     }),
-    { name: "TradingSyncStore" }
-  )
+    { name: "SynchronisationStore" },
+  ),
 );

@@ -3,14 +3,10 @@ import { apiClient } from "@/lib/api-client";
 import { ConnectedAccount, Platform } from "../types/trading-account-types";
 
 export interface ConnectAccountData {
-  platformId?: string;
-  apiKey?: string;
-  apiSecret?: string;
-  nickname?: string;
-  server?: string;
-  readOnly?: boolean;
-  accountNumber?: string;
-  password?: string;
+  userId:string;
+  platformId: string;
+  nickname: string;
+  credentials: Record<string, string>;
 }
 
 export interface UpdateAccountData {
@@ -37,8 +33,9 @@ export const tradingAccountService = {
    * Connect a new account
    */
   async connectAccount(data: ConnectAccountData): Promise<ConnectedAccount> {
+    console.log('connect account request', data);
     const response = await apiClient.post<ConnectedAccount>(
-      TRADE_SERVICE_BASE_URL + "/connect/mt5",
+      TRADE_SERVICE_BASE_URL + "/connect",
       data,
     );
     return response.data;
@@ -68,6 +65,7 @@ export const tradingAccountService = {
    * Sync all accounts
    */
   async syncAllAccounts(userId: string): Promise<{ message: string }> {
+    console.info("syncing all...for user: ", userId)
     const response = await apiClient.post<{ message: string }>(
       TRADE_SERVICE_BASE_URL + "/sync-all?userId=" + userId,
     );

@@ -2,6 +2,7 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import {
   CheckCircle2,
   Activity,
@@ -12,14 +13,15 @@ import {
   ChevronRight,
   AlertTriangle,
   XCircle,
+  Shield,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useTradingSyncStore } from "@/lib/store/trading-account-store";
-import { useSyncAllAccounts } from "@/hooks/use-trading-account";
+import { useSyncAllAccounts } from "@/hooks/use-synchronisation";
 import { StatsCards } from "./statistics-card";
 import { AccountCard } from "./account-card";
 import { PortfolioSummary } from "./portfolio-summary";
 import { ConnectedAccount } from "@/lib/types/trading-account-types";
+import { useAuthStore } from "@/lib/store/auth-store";
 
 interface OverviewTabProps {
   accounts: ConnectedAccount[];
@@ -33,17 +35,23 @@ export function OverviewTab({
   onSyncAll,
 }: OverviewTabProps) {
   console.log("Rendering OverviewTab with accounts:", accounts);
-  const { syncingAll } = useTradingSyncStore();
   const { syncAllAccounts, isSyncing } = useSyncAllAccounts();
+  const { user } = useAuthStore();
 
-  const activeAccountsCount = accounts.filter(
-    (a) => a.status === "connected",
+  const activeAccountsCount = accounts.filter((a) => a.isActive).length;
+
+  // Calculate stats for Sync Status card
+  const syncingAccountsCount = accounts.filter(
+    (a) => a.status === "syncing",
   ).length;
+  const errorAccountsCount = accounts.filter((a) => a.syncError).length;
 
   const handleSyncAll = async () => {
     try {
-      await syncAllAccounts();
-      onSyncAll();
+      if (user && user.id) {
+        await syncAllAccounts(user.id);
+        onSyncAll();
+      }
     } catch (error) {
       console.error("Failed to sync all accounts:", error);
     }
@@ -83,15 +91,12 @@ export function OverviewTab({
               size="sm"
               className="gap-2"
               onClick={handleSyncAll}
-              disabled={isSyncing || syncingAll || activeAccountsCount === 0}
+              disabled={isSyncing}
             >
               <RefreshCw
-                className={cn(
-                  "w-3 h-3",
-                  (isSyncing || syncingAll) && "animate-spin",
-                )}
+                className={cn("w-3 h-3", isSyncing && "animate-spin")}
               />
-              {isSyncing || syncingAll ? "Syncing..." : "Sync All"}
+              {isSyncing ? "Syncing..." : "Sync All"}
             </Button>
           </div>
 
@@ -101,6 +106,7 @@ export function OverviewTab({
                 key={account.id}
                 account={account}
                 onClick={() => onAccountClick(account)}
+                syncing={isSyncing}
               />
             ))}
           </div>
@@ -109,8 +115,81 @@ export function OverviewTab({
         <PortfolioSummary accounts={accounts} />
       </div>
 
-      <div className="lg:col-span-1">
-        {/* Side panel content can go here */}
+      {/* Side Panel*/}
+      <div className="lg:col-span-1 space-y-6">
+        {/* Sync Status Card */}
+        <Card className="p-5 bg-card/50 border-border/50">
+          <h3 className="font-semibold mb-4">Sync Status</h3>
+
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Active Accounts</span>
+              <span className="text-xl font-bold">{activeAccountsCount}</span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Currently Syncing</span>
+              <span className="text-xl font-bold">{syncingAccountsCount}</span>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <span className="text-sm">Requires Attention</span>
+              <span className="text-xl font-bold text-destructive">
+                {errorAccountsCount}
+              </span>
+            </div>
+          </div>
+        </Card>
+
+        {/* Sync Limits Card */}
+        <Card className="p-5 bg-card/50 border-border/50">
+          <h3 className="font-semibold mb-4">Sync Limits</h3>
+
+          <div className="space-y-4">
+            <div>
+              <div className="flex items-center justify-between text-sm mb-2">
+                <span>Accounts Connected</span>
+                <span className="font-medium">{accounts.length}/5</span>
+              </div>
+              <Progress value={(accounts.length / 5) * 100} className="h-2" />
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between text-sm mb-2">
+                <span>Daily Syncs</span>
+                <span className="font-medium">Unlimited</span>
+              </div>
+              <Progress value={100} className="h-2" />
+            </div>
+
+            <div>
+              <div className="flex items-center justify-between text-sm mb-2">
+                <span>Historical Data</span>
+                <span className="font-medium">90 days</span>
+              </div>
+              <Progress value={100} className="h-2" />
+            </div>
+          </div>
+        </Card>
+
+        {/* Security & Privacy Card */}
+        <Card className="p-5 bg-primary/5 border-primary/20">
+          <div className="flex items-center gap-3 mb-2">
+            <Shield className="w-5 h-5 text-primary" />
+            <h3 className="font-semibold">Security & Privacy</h3>
+          </div>
+
+          <ul className="space-y-2 text-sm">
+            <li className="flex items-start gap-2">
+              <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" />
+              <span>Read-only access to your trading history</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <CheckCircle2 className="w-4 h-4 text-success shrink-0 mt-0.5" />
+              <span>Bank-level 256-bit encryption</span>
+            </li>
+          </ul>
+        </Card>
       </div>
     </div>
   );

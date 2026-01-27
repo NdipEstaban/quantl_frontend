@@ -6,6 +6,7 @@ import { Header } from "@/components/app/header";
 import TradeData from "@/lib/types/trade-types";
 import { useHeaderStore } from "@/lib/store/header-store";
 import { TradeFormWizard } from "@/components/app/overview/trade-form-wizard";
+import { Toaster } from "@/components/ui/sonner";
 
 const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
@@ -43,6 +44,7 @@ export default function RootLayout({
     <html lang="en" className="">
       <body className={`font-sans antialiased min-h-screen bg-background`}>
         {children}
+        <Toaster />
       </body>
     </html>
   );

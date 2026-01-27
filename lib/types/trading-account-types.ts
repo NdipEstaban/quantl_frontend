@@ -1,23 +1,41 @@
+import { LogAction } from "../constants/log-actions";
+
+export enum platformBackendIds {
+  MT5 = "MT5",
+  MT4 = "MT4",
+  CTRADER = "CTRADER",
+  INTERACTIVE_BROKERS = "INTERACTIVE_BROKERS",
+  BINANCE = "BINANCE",
+  COINBASE = "COINBASE",
+  ALPACA = "ALPACA",
+  TRADINGVIEW = "TRADINGVIEW",
+  ETORO = "ETORO",
+  WEBULL = "WEBULL",
+  TD_AMERITRADE = "TD_AMERITRADE",
+  EXNESS = "EXNESS",
+  OTHER = "OTHER",
+}
+
 export interface Platform {
-  id: string;
+  id: platformBackendIds;
   name: string;
-  icon: string;
   status: "popular" | "new" | "available" | "coming-soon";
   method: "oauth" | "api" | "manual" | "webhook";
   description: string;
   available: boolean;
-  color: string;
+  logoUrl: string;
 }
 
 export interface ConnectedAccount {
   id: string;
   platform: string;
   platformId: string;
+  brokerName: string;
   accountName: string;
   status: "connected" | "error" | "syncing" | "warning";
   lastSyncAt: string;
-  syncFrequency: string;
-  numberOfTrades: number;
+  syncFrequency: number;
+  numberOfTrades?: number;
   connectionMethod: string;
   autoSync: boolean;
   balance: number;
@@ -26,10 +44,16 @@ export interface ConnectedAccount {
   freeMargin: number;
   currency: string;
   leverage: number;
-  isActive:boolean;
+  isActive: boolean;
   isDemo: boolean;
-  isPaperTrade: boolean;
+  isContest: boolean;
   syncError?: string;
+  logs?: {
+    createdAt: string;
+    metadata: Record<string, any>;
+    id: string;
+    action: LogAction;
+  }[];
 }
 
 export interface ConnectionFormState {
@@ -72,7 +96,7 @@ export interface TradingSyncState {
   removeAccount: (accountId: string) => void;
   updateAccount: (
     accountId: string,
-    updates: Partial<ConnectedAccount>
+    updates: Partial<ConnectedAccount>,
   ) => void;
   syncAccount: (accountId: string) => void;
   syncAllAccounts: (accounts: ConnectedAccount[]) => void;

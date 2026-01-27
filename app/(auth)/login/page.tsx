@@ -47,7 +47,7 @@ export default function LoginPage() {
       {/* Left Side - Visual Hero (Hidden on Mobile) */}
       <div className="hidden lg:flex w-1/2 bg-secondary/20 border-r border-border relative items-center justify-center p-12 overflow-hidden">
         {/* Background Gradient Effect */}
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-emerald-900/20 via-background to-background pointer-events-none" />
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_left,var(--tw-gradient-stops))] from-emerald-900/20 via-background to-background pointer-events-none" />
 
         <div className="relative z-10 w-full max-w-md space-y-8">
           <div className="space-y-2">
