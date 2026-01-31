@@ -67,8 +67,7 @@ export function VitalsSection() {
           <Card
             key={metric.label}
             className={cn(
-              "relative overflow-hidden p-4 bg-card/50 border-border/50 hover:border-primary/30 transition-all duration-300 group",
-              "hover:shadow-lg hover:shadow-primary/5",
+              "relative overflow-hidden p-4 bg-card/50 border-border/50",
             )}
           >
             {/* Gradient accent line */}
