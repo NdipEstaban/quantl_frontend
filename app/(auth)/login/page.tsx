@@ -35,6 +35,7 @@ export default function LoginPage() {
     await login({
       email: formData.email,
       password: formData.password,
+      rememberMe: formData.rememberMe,
     });
   };
 
@@ -216,7 +217,12 @@ export default function LoginPage() {
                   id="remember"
                   className="h-4 w-4 rounded border-zinc-500/30 bg-secondary/20 text-emerald-500 focus:ring-emerald-500/20"
                   disabled={isSubmitting}
-                  onInput={(e) => setFormData({...formData, rememberMe: e.currentTarget.checked})}
+                  onInput={(e) =>
+                    setFormData({
+                      ...formData,
+                      rememberMe: e.currentTarget.checked,
+                    })
+                  }
                 />
                 <Label
                   htmlFor="remember"
