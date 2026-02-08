@@ -1,51 +1,23 @@
-// hooks/use-auth.ts
+"use client";
+
 import { useState } from "react";
-import useSWR from "swr";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner"; // or your toast library
-import { useAuthStore } from "@/lib/store/auth-store";
+import { useUserStore } from "@/lib/store/user-store";
 import { authService } from "@/lib/services/auth-service";
 import { LoginDto, RegisterDto, VerifyEmailDto } from "@/lib/types/auth-types";
+import useSWR from "swr";
+import Cookies from "js-cookie";
 
 export function useAuth() {
   const router = useRouter();
   const { user, isAuthenticated, setAuth, clearAuth, setLoading } =
-    useAuthStore();
+    useUserStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resetStep, setResetStep] = useState<"request" | "verify" | "reset">(
     "request",
   );
   const [resetEmail, setResetEmail] = useState("");
-
-  // Fetch user profile using SWR (only if authenticated)
-  const {
-    data: profile,
-    error: profileError,
-    mutate: mutateProfile,
-    isLoading: isLoadingProfile,
-  } = useSWR(
-    isAuthenticated ? "/auth/profile" : null,
-    () => authService.getProfile(),
-    {
-      revalidateOnFocus: false,
-      revalidateOnReconnect: true,
-      revalidateIfStale: true,
-      shouldRetryOnError: false,
-      onSuccess: (data) => {
-        console.info("Fetched user profile:", data);
-        if (data) {
-          console.clear();
-          console.log("Updating user in store with profile data:", data);
-          useAuthStore.getState().setUser(data);
-        }
-      },
-      onError: (e) => {
-        console.error("Failed to fetch user profile: ", e);
-        //TODO: determine right logic at production
-        //clearAuth();
-      },
-    },
-  );
 
   /**
    * Register a new user
@@ -106,6 +78,29 @@ export function useAuth() {
   /**
    * Login with email and password
    */
+  // const login = async (data: LoginDto) => {
+  //   setIsSubmitting(true);
+  //   setLoading(true);
+
+  //   try {
+  //     const response = await authService.login(data);
+
+  //     setAuth(response.user, response.accessToken!, response.refreshToken!);
+
+  //     toast.success("Login successful!");
+  //     router.push("/app");
+
+  //     return { success: true, data: response };
+  //   } catch (error: any) {
+  //     const message = error.response?.data?.message || "Login failed";
+  //     toast.error(message);
+  //     return { success: false, error: message };
+  //   } finally {
+  //     setIsSubmitting(false);
+  //     setLoading(false);
+  //   }
+  // };
+
   const login = async (data: LoginDto) => {
     setIsSubmitting(true);
     setLoading(true);
@@ -113,7 +108,32 @@ export function useAuth() {
     try {
       const response = await authService.login(data);
 
-      setAuth(response.user, response.accessToken!, response.refreshToken!);
+      // Extract tokens regardless of which structure the backend used
+      const access = response.accessToken || response.tokens?.accessToken;
+      const refresh = response.refreshToken || response.tokens?.refreshToken;
+
+      if (refresh && access) {
+        // 1. Set Access Token Cookie (Short lived, e.g., 15 mins matching JWT exp)
+        Cookies.set("accessToken", access, {
+          secure: true,
+          sameSite: "strict",
+          path: "/", // Critical so it's available on all routes
+        });
+
+        // 2. Set Refresh Token Cookie
+        Cookies.set("refreshToken", refresh, {
+          expires: data.rememberMe ? 30 : undefined,
+          secure: true,
+          sameSite: "strict",
+          path: "/",
+        });
+      }
+
+      // Update your global state (Zustand, Redux, or Context)
+      setAuth(response.user, access!, refresh!);
+
+      // PERSIST USER: Save minimal profile info to local storage for instant UI loading
+      localStorage.setItem("user_profile", JSON.stringify(response.user));
 
       toast.success("Login successful!");
       router.push("/app");
@@ -239,10 +259,38 @@ export function useAuth() {
     }
   };
 
+  /*const refreshToken = async () => {
+    setLoading(true);
+    const refreshToken = Cookies.get("refresh_token");
+    if (!refreshToken) {
+      const currentPath = window.location.pathname;
+      router.replace(`/login?callbackUrl=${encodeURIComponent(currentPath)}`);
+      toast.info("Session expired, please log in again.");
+      return;
+    }
+
+    const response = await authService.refreshToken(refreshToken!);
+    if (response.accessToken && response.refreshToken) {
+      setAuth(response.user, response.accessToken, response.refreshToken);
+      Cookies.set("refresh_token", response.refreshToken, {
+        expires: 30,
+        secure: false, //TODO: set to true if in production,
+        sameSite: "strict",
+      });
+      return { success: true };
+    } else {
+      const currentPath = window.location.pathname;
+      router.replace(`/login?callbackUrl=${encodeURIComponent(currentPath)}`);
+      toast.info("Session expired, please log in again.");
+    }
+    setLoading(false);
+    return { success: false };
+  };*/
+
   return {
-    user: profile || user,
+    user,
     isAuthenticated,
-    isLoading: isLoadingProfile || useAuthStore.getState().isLoading,
+    isLoading: useUserStore.getState().isLoading,
     isSubmitting,
     register,
     verifyEmail,
@@ -250,7 +298,6 @@ export function useAuth() {
     logout,
     loginWithGoogle,
     loginWithFacebook,
-    mutateProfile,
     requestPasswordReset,
     verifyResetCode,
     resetPassword,

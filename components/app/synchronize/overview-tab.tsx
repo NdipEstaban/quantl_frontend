@@ -21,7 +21,7 @@ import { StatsCards } from "./statistics-card";
 import { AccountCard } from "./account-card";
 import { PortfolioSummary } from "./portfolio-summary";
 import { ConnectedAccount } from "@/lib/types/trading-account-types";
-import { useAuthStore } from "@/lib/store/auth-store";
+import { useUserStore } from "@/lib/store/user-store";
 
 interface OverviewTabProps {
   accounts: ConnectedAccount[];
@@ -36,7 +36,7 @@ export function OverviewTab({
 }: OverviewTabProps) {
   console.log("Rendering OverviewTab with accounts:", accounts);
   const { syncAllAccounts, isSyncing } = useSyncAllAccounts();
-  const { user } = useAuthStore();
+  const { user } = useUserStore();
 
   const activeAccountsCount = accounts.filter((a) => a.isActive).length;
 

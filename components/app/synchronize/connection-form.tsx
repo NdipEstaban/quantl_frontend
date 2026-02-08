@@ -31,7 +31,7 @@ import {
   platformConfig,
 } from "@/lib/constants/platform-config";
 import { Card } from "@/components/ui/card";
-import { useAuthStore } from "@/lib/store/auth-store";
+import { useUserStore } from "@/lib/store/user-store";
 
 interface ConnectionFormProps {
   platform: Platform;
@@ -41,7 +41,7 @@ interface ConnectionFormProps {
 export function ConnectionForm({ platform, onCancel }: ConnectionFormProps) {
   const { connectAccount, isConnecting, error } = useConnectAccount();
   const authConfig = getPlatformAuthConfig(platform.id);
-  const { user } = useAuthStore();
+  const { user } = useUserStore();
 
   // Dynamic form state
   const [formData, setFormData] = useState<Record<string, string>>({});

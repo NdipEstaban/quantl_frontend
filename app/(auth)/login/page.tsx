@@ -25,6 +25,7 @@ export default function LoginPage() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    rememberMe: false,
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -215,6 +216,7 @@ export default function LoginPage() {
                   id="remember"
                   className="h-4 w-4 rounded border-zinc-500/30 bg-secondary/20 text-emerald-500 focus:ring-emerald-500/20"
                   disabled={isSubmitting}
+                  onInput={(e) => setFormData({...formData, rememberMe: e.currentTarget.checked})}
                 />
                 <Label
                   htmlFor="remember"

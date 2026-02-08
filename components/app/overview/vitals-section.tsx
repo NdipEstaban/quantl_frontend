@@ -1,66 +1,84 @@
-"use client"
+"use client";
 
-import { Card } from "@/components/ui/card"
-import { TrendingUp, TrendingDown, Target, Percent, DollarSign, BarChart3 } from "lucide-react"
-import { cn } from "@/lib/utils"
+import { Card } from "@/components/ui/card";
+import {
+  TrendingUp,
+  TrendingDown,
+  Target,
+  Percent,
+  DollarSign,
+  BarChart3,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { useVitals } from "@/hooks/use-metrics";
+import { Vitals } from "@/lib/services/metrics-service";
 
-const vitalsData = [
-  {
-    label: "Win Rate",
-    value: "58.3%",
-    change: "+2.1%",
-    isPositive: true,
-    icon: Target,
-    description: "vs last period",
-  },
-  {
-    label: "Profit Factor",
-    value: "1.87",
-    change: "+0.12",
-    isPositive: true,
-    icon: BarChart3,
-    description: "Gross profit / loss",
-  },
-  {
-    label: "Risk/Reward",
-    value: "1:2.4",
-    change: "+0.3",
-    isPositive: true,
-    icon: Percent,
-    description: "Avg RRR",
-  },
-  {
-    label: "Net P&L",
-    value: "$12,847",
-    change: "+$2,341",
-    isPositive: true,
-    icon: DollarSign,
-    description: "This period",
-  },
-  {
-    label: "Max Drawdown",
-    value: "-8.2%",
-    change: "-1.3%",
-    isPositive: true,
-    icon: TrendingDown,
-    description: "Peak to trough",
-  },
-  {
-    label: "Avg Win/Loss",
-    value: "$485 / $287",
-    change: "1.69:1",
-    isPositive: true,
-    icon: TrendingUp,
-    description: "Ratio",
-  },
-]
+interface VitalsProps {
+  current: Vitals;
+  previous: Vitals;
+}
 
-export function VitalsSection() {
+export function VitalsSection({ current, previous }: VitalsProps) {
+  console.log("current vitals", current);
+
+  const vitalsData = [
+    {
+      label: "Win Rate",
+      value: `${current.winRate}%`,
+      change: `${current.winRate - previous.winRate}%`,
+      isPositive: true,
+      icon: Target,
+      description: "vs last period",
+    },
+    {
+      label: "Max Drawdown duration",
+      value: `${current.maxDrawdownDurationInDays} days`,
+      change: `${current.maxDrawdownDurationInDays - previous.maxDrawdownDurationInDays}`,
+      isPositive: true,
+      icon: BarChart3,
+      description: "How long was account in drawdown",
+    },
+    {
+      label: "Risk/Reward",
+      value: `${current.averageRiskToReward}`,
+      change: `${current.averageRiskToReward - previous.averageRiskToReward}`,
+      isPositive: true,
+      icon: Percent,
+      description: "Avg RRR",
+    },
+    {
+      label: "Net P&L",
+      value: `${current.netProfit}`,
+      change: `+${current.netProfit - previous.netProfit}`,
+      isPositive: true,
+      icon: DollarSign,
+      description: "This period",
+    },
+    {
+      label: "Max Drawdown",
+      value: `${current.percentageDrawdown}`,
+      change: `${current.percentageDrawdown - previous.percentageDrawdown}`,
+      isPositive: true,
+      icon: TrendingDown,
+      description: "Peak to trough",
+    },
+    {
+      label: "Avg Win/Loss",
+      value: `${current.averageWin} / ${current.averageLoss}`,
+      change: `${current.averageWin - previous.averageWin} / ${current.averageLoss - previous.averageLoss}`,
+      isPositive: true,
+      icon: TrendingUp,
+      description: "Ratio",
+    },
+  ];
+
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-foreground">The Vitals</h2>
-        <span className="text-xs text-muted-foreground uppercase tracking-wider">Level 1 Metrics</span>
+        <span className="text-xs text-muted-foreground uppercase tracking-wider">
+          Level 1 Metrics
+        </span>
       </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         {vitalsData.map((metric, index) => (
@@ -78,7 +96,9 @@ export function VitalsSection() {
               <span
                 className={cn(
                   "text-xs font-medium px-1.5 py-0.5 rounded",
-                  metric.isPositive ? "text-success bg-success/10" : "text-destructive bg-destructive/10",
+                  metric.isPositive
+                    ? "text-success bg-success/10"
+                    : "text-destructive bg-destructive/10",
                 )}
               >
                 {metric.change}
@@ -86,13 +106,19 @@ export function VitalsSection() {
             </div>
 
             <div className="space-y-1">
-              <p className="text-2xl font-bold tracking-tight text-foreground">{metric.value}</p>
-              <p className="text-xs font-medium text-muted-foreground">{metric.label}</p>
-              <p className="text-[10px] text-muted-foreground/60">{metric.description}</p>
+              <p className="text-2xl font-bold tracking-tight text-foreground">
+                {metric.value}
+              </p>
+              <p className="text-xs font-medium text-muted-foreground">
+                {metric.label}
+              </p>
+              <p className="text-[10px] text-muted-foreground/60">
+                {metric.description}
+              </p>
             </div>
           </Card>
         ))}
       </div>
     </div>
-  )
+  );
 }

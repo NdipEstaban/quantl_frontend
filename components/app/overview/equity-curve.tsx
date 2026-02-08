@@ -28,7 +28,7 @@ export interface DayData {
 }
 
 export interface EquityPoint {
-  date: string;
+  period: string;
   equity: number;
   drawdown?: number;
 }
@@ -42,18 +42,18 @@ export interface EquityCurveProps {
 // --- Defaults ---
 
 const defaultChartData: EquityPoint[] = [
-  { date: "Jan", equity: 10000 },
-  { date: "Feb", equity: 10850 },
-  { date: "Mar", equity: 10200 },
-  { date: "Apr", equity: 11400 },
-  { date: "May", equity: 12100 },
-  { date: "Jun", equity: 11500 },
-  { date: "Jul", equity: 13200 },
-  { date: "Aug", equity: 14500 },
-  { date: "Sep", equity: 13800 },
-  { date: "Oct", equity: 15200 },
-  { date: "Nov", equity: 16800 },
-  { date: "Dec", equity: 18247 },
+  { period: "Jan", equity: 10000 },
+  { period: "Feb", equity: 10850 },
+  { period: "Mar", equity: 10200 },
+  { period: "Apr", equity: 11400 },
+  { period: "May", equity: 12100 },
+  { period: "Jun", equity: 11500 },
+  { period: "Jul", equity: 13200 },
+  { period: "Aug", equity: 14500 },
+  { period: "Sep", equity: 13800 },
+  { period: "Oct", equity: 15200 },
+  { period: "Nov", equity: 16800 },
+  { period: "Dec", equity: 18247 },
 ];
 
 const defaultCalendarData: Record<string, DayData> = {

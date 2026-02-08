@@ -23,7 +23,7 @@ export const authService = {
     console.log(data);
     const response = await apiClient.post<AuthResponse>(
       "/auth/verify-email",
-      data
+      data,
     );
     return response.data;
   },
@@ -39,12 +39,12 @@ export const authService = {
   /**
    * Refresh access token
    */
-  async refreshToken(refreshToken: string): Promise<AuthResponse> {
-    const response = await apiClient.post<AuthResponse>("/auth/refresh", {
+  /*async refreshToken(refreshToken: string): Promise<AuthResponse> {
+    const response = await apiClient.post<AuthResponse>("/auth/refresh-token", {
       refreshToken,
     });
     return response.data;
-  },
+  },*/
 
   /**
    * Logout
@@ -81,7 +81,7 @@ export const authService = {
   async requestPasswordReset(email: string): Promise<{ message: string }> {
     const response = await apiClient.post<{ message: string }>(
       "/auth/forgot-password",
-      { email }
+      { email },
     );
     return response.data;
   },
@@ -91,11 +91,11 @@ export const authService = {
    */
   async verifyResetCode(
     email: string,
-    code: string
+    code: string,
   ): Promise<{ isValid: boolean }> {
     const response = await apiClient.post<{ isValid: boolean }>(
       "/auth/verify-reset-code",
-      { email, code }
+      { email, code },
     );
     return response.data;
   },
@@ -106,11 +106,11 @@ export const authService = {
   async resetPassword(
     email: string,
     code: string,
-    newPassword: string
+    newPassword: string,
   ): Promise<{ message: string }> {
     const response = await apiClient.post<{ message: string }>(
       "/auth/reset-password",
-      { email, code, newPassword }
+      { email, code, newPassword },
     );
     return response.data;
   },

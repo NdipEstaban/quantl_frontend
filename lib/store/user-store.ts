@@ -3,7 +3,7 @@ import { User, UserRole } from "@/lib/types/auth-types";
 import { create } from "zustand";
 import { persist, createJSONStorage, devtools } from "zustand/middleware";
 
-interface AuthState {
+interface UserState {
   user: User | null;
   accessToken: string | null;
   refreshToken: string | null;
@@ -18,7 +18,7 @@ interface AuthState {
   setLoading: (loading: boolean) => void;
 }
 
-export const useAuthStore = create<AuthState>()(
+export const useUserStore = create<UserState>()(
   devtools(
     persist(
       (set) => ({
@@ -74,6 +74,6 @@ export const useAuthStore = create<AuthState>()(
         }),
       },
     ),
-    {name:"AuthStore"}
+    { name: "AuthStore" },
   ),
 );

@@ -1,3 +1,5 @@
+"use client";
+
 // hooks/use-trading-account.ts
 import useSWR from "swr";
 import useSWRMutation from "swr/mutation";
@@ -8,12 +10,13 @@ import {
   UpdateAccountData,
 } from "@/lib/services/trading-account-service";
 import { ConnectedAccount, Platform } from "@/lib/types/trading-account-types";
-import { useAuthStore } from "@/lib/store/auth-store";
+import { useUserStore } from "@/lib/store/user-store";
 import { useSynchronisationStore } from "@/lib/store/synchronisation-store";
 
 // Fetch all connected accounts
 export function useConnectedAccounts() {
-  const { user } = useAuthStore();
+  const { user } = useUserStore();
+  const { setSelectedAccount } = useSynchronisationStore();
   const { data, error, isLoading, mutate, isValidating } = useSWR<
     BackendResponse<ConnectedAccount[]>
   >(
@@ -29,6 +32,8 @@ export function useConnectedAccounts() {
       },
       onSuccess: (data) => {
         console.log("Fetched connected accounts:", data, ",user:", user);
+        setSelectedAccount(data.data[0] || null); // Set first account as selected by defaul
+        toast.success("Successfully fetched accounts");
       },
     },
   );
@@ -113,7 +118,7 @@ export function useSyncAccount() {
     "/api/accounts/sync",
     async (key, { arg }: { arg: string }) => {
       try {
-        console.log('synchronising all accounts');
+        console.log("synchronising all accounts");
         const response = await tradingAccountService.syncAccount(arg);
         toast.success("Account synced successfully");
 
@@ -173,7 +178,7 @@ export function useSyncAllAccounts() {
 // Update account settings
 export function useUpdateAccount() {
   const { mutate: mutateAccounts } = useConnectedAccounts();
-  const {updateAccount} = useSynchronisationStore();
+  const { updateAccount } = useSynchronisationStore();
 
   const { trigger, isMutating, error } = useSWRMutation(
     "/api/accounts/update",
@@ -204,7 +209,6 @@ export function useUpdateAccount() {
     error,
   };
 }
-
 
 // Main hook that combines all trading account functionality
 export function useTradingAccount() {
